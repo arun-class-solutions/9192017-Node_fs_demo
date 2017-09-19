@@ -1,15 +1,21 @@
 const fs = require("fs");
 const path = require("path");
 
-const readStream = fs.createReadStream(path.join(__dirname, "wordsEn.txt"));
-const writeStream = fs.createWriteStream(path.join(__dirname, "copiedWords.txt"));
+const copyFile = (inputPath, outputPath) => {
+  return new Promise((resolve, reject) => {
+    const readStream = fs.createReadStream(path.join(__dirname, inputPath));
+    const writeStream = fs.createWriteStream(path.join(__dirname, outputPath));
 
-readStream.pipe(writeStream);
+    readStream.pipe(writeStream);
 
-readStream.on("data", (fileData) => {
-  // console.log(fileData.toString());
-});
+    writeStream.on("finish", () => {
+      resolve();
+    });
 
-writeStream.on("finish", () => {
-  console.log("Write finished!");
-});
+    writeStream.on("error", (err) => {
+      reject(err);
+    });
+  });
+}
+
+module.exports = copyFile;
