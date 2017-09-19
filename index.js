@@ -12,6 +12,10 @@ const copyFile = (inputPath, outputPath) => {
       resolve();
     });
 
+    readStream.on("error", (err) => {
+      reject(err);
+    });
+
     writeStream.on("error", (err) => {
       reject(err);
     });
